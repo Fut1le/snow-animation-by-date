@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Snow Animation</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: black;
+        }
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        .switch {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    <div class="switch">
+        <label>
+            Snow:
+            <input type="checkbox" id="snowToggle">
+        </label>
+    </div>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var currentDate = new Date();
+            var currentMonth = currentDate.getMonth(); // 0 - январь, 11 - декабрь
+
+            function createSnow() {
+                particlesJS("particles-js", {
+                    particles: {
+                        number: {
+                            value: 200,
+                            density: {
+                                enable: true,
+                                value_area: 800
+                            }
+                        },
+                        color: {
+                            value: "#ffffff"
+                        },
+                        shape: {
+                            type: "circle",
+                            stroke: {
+                                width: 0,
+                                color: "#000000"
+                            },
+                            polygon: {
+                                nb_sides: 5
+                            }
+                        },
+                        opacity: {
+                            value: 0.5,
+                            random: false,
+                            anim: {
+                                enable: false,
+                                speed: 1,
+                                opacity_min: 0.1,
+                                sync: false
+                            }
+                        },
+                        size: {
+                            value: 3,
+                            random: true,
+                            anim: {
+                                enable: false,
+                                speed: 40,
+                                size_min: 0.1,
+                                sync: false
+                            }
+                        },
+                        line_linked: {
+                            enable: false,
+                            distance: 500,
+                            color: "#ffffff",
+                            opacity: 0.4,
+                            width: 2
+                        },
+                        move: {
+                            enable: true,
+                            speed: 2,
+                            direction: "bottom",
+                            random: true,
+                            straight: false,
+                            out_mode: "out",
+                            bounce: false,
+                            attract: {
+                                enable: false,
+                                rotateX: 600,
+                                rotateY: 1200
+                            }
+                        }
+                    },
+                    interactivity: {
+                        detect_on: "canvas",
+                        events: {
+                            onhover: {
+                                enable: true,
+                                mode: "bubble"
+                            },
+                            onclick: {enable: true,
+                                mode: "repulse"
+                            },
+                            resize: true
+                        },
+                        modes: {
+                            grab: {
+                                distance: 400,
+                                line_linked: {
+                                    opacity: 0.5
+                                }
+                            },
+                            bubble: {
+                                distance: 400,
+                                size: 4,
+                                duration: 0.3,
+                                opacity: 1,
+                                speed: 3
+                            },
+                            repulse: {
+                                distance: 200,
+                                duration: 0.4
+                            },
+                            push: {
+                                particles_nb: 4
+                            },
+                            remove: {
+                                particles_nb: 2
+                            }
+                        }
+                    },
+                    retina_detect: true
+                });
+            }
+            
+            function removeSnow() {
+                if (window.pJSDom && window.pJSDom.length > 0) {
+                    window.pJSDom[0].pJS.fn.vendors.destroypJS();
+                    window.pJSDom = [];
+                }
+            }
+            
+            var snowToggle = document.getElementById('snowToggle');
+            
+            // При загрузке страницы устанавливаем состояние переключателя из localStorage
+            var snowEnabled = localStorage.getItem('snowEnabled');
+            if (snowEnabled === null) {
+                // Если в localStorage ничего нет, устанавливаем значение по умолчанию в зависимости от месяца
+                snowEnabled = (currentMonth === 11 || currentMonth === 0 || currentMonth === 1);
+                localStorage.setItem('snowEnabled', snowEnabled);
+            } else {
+                snowEnabled = (snowEnabled === 'true');
+            }
+            snowToggle.checked = snowEnabled;
+            
+            if (snowEnabled) {
+                createSnow();
+            }
+            
+            // Добавляем слушатель изменения состояния переключателя
+            snowToggle.addEventListener('change', function() {
+                snowEnabled = snowToggle.checked;
+                localStorage.setItem('snowEnabled', snowEnabled);
+                if (snowEnabled) {
+                    createSnow();
+                } else {
+                    removeSnow();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
